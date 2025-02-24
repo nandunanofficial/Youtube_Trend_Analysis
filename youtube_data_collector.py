@@ -20,11 +20,11 @@ CHANNEL_IDS = [
     "UCJbPGzawDH1njbqV-D5HqKw",
     "UCMUnInmOkrWN4gof9KlhNmQ",
     "UCW5YeuERMmlnqo4oq8vwUpg",
-    "UCCPWi_OwWMR5JTiujn7v-7g",
+    "UCI8jB8K_UMBYVBDK6TkoqJw",
     "UC8butISFwT-Wl7EV0hUK0BQ",
     "UCsBjURrPoezykLs9EqgamOA",
     "UCYbK_tjZ2OrIZFBvU6CCMiA",
-    "UCGg6SROHmOtwEw4g4Ye15RA",
+    "UC64oAui-2SgKpSlT-pjBX_g",
     "UCX6b17PVsYBQ0ip5gyeme-Q",
     "UCtinbF-Q-fVthA0qrFQTgXQ"
 ]
