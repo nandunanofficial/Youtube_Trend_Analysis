@@ -22,11 +22,12 @@ jobs:
 
       - name: Run Data Collection Script
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
           API_KEY: ${{ secrets.API_YOUTUBE }}
         run: python youtube_data_collector.py
 
       - name: Commit and Push Changes
+        env:
+          PAT: ${{ secrets.GH_PAT }}
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "action@github.com"
