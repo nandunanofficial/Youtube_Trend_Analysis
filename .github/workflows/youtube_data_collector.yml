@@ -5,6 +5,10 @@ on:
     - cron: "0 * * * *"  # Runs every hour
   workflow_dispatch:  # Allows manual trigger
 
+permissions:
+  contents: write
+  actions: read
+
 jobs:
   collect_data:
     runs-on: ubuntu-latest
