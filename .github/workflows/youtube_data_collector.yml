@@ -22,7 +22,7 @@ jobs:
 
       - name: Run Data Collection Script
         env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }}
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
           API_KEY: ${{ secrets.API_YOUTUBE }}
         run: python youtube_data_collector.py
 
