@@ -23,7 +23,7 @@ jobs:
       - name: Run Data Collection Script
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          API_KEY: "YOUR_YOUTUBE_API_KEY"
+          API_KEY: "AIzaSyCbE9LwgnK_lGlMTpQpItxi58WCkhfwit4"
         run: python youtube_data_collector.py
 
       - name: Commit and Push Changes
