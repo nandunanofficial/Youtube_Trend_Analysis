@@ -26,7 +26,7 @@ CHANNEL_IDS = [
 ]
 
 # GitHub Credentials
-GITHUB_TOKEN = "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"
+GITHUB_TOKEN = "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"
 REPO_OWNER = "nandunanofficial"
 REPO_NAME = "Youtube_Trend_Analysis"
 FILE_PATH = "youtube_trends.csv"
