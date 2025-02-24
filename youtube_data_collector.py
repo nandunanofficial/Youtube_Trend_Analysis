@@ -4,7 +4,7 @@ import datetime
 import base64
 
 # YouTube API Key
-API_KEY = "AIzaSyCbE9LwgnK_lGlMTpQpItxi58WCkhfwit4"
+API_KEY = os.getenv("API_YOUTUBE")
 
 # List of YouTube Channel IDs (15 channels)
 CHANNEL_IDS = [
