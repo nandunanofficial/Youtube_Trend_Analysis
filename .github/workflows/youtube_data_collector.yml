@@ -24,9 +24,21 @@ jobs:
       - name: Install Dependencies
         run: pip install requests
 
+      - name: Debug API Key
+        run: |
+          if [[ -z "${API_YOUTUBE}" ]]; then
+            echo "❌ ERROR: API_YOUTUBE secret is missing!"
+            exit 1
+          else
+            echo "✅ API key detected!"
+          fi
+        env:
+          API_YOUTUBE: ${{ secrets.API_YOUTUBE }}
+
       - name: Run Data Collection Script
         env:
-          API_KEY: ${{ secrets.API_YOUTUBE }}
+          API_YOUTUBE: ${{ secrets.API_YOUTUBE }}
+          GH_PAT: ${{ secrets.GH_PAT }}
         run: python youtube_data_collector.py
 
       - name: Commit and Push Changes
@@ -35,7 +47,6 @@ jobs:
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "action@github.com"
-          git pull --rebase origin main  # Ensure the latest changes are pulled
           git add youtube_trends.csv
           git commit -m "Updated YouTube Trends Data" || echo "No changes to commit"
-          git push origin main
+          git push
