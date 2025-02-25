@@ -6,6 +6,10 @@ on:
 
   workflow_dispatch:  # Allows manual execution
 
+permissions:
+  contents: write
+  actions: read
+
 jobs:
   collect-trending-data:
     runs-on: ubuntu-latest
