@@ -24,7 +24,7 @@ jobs:
       - name: Run Python Script
         env:
           YOUTUBE_API_KEY: ${{ secrets.API_YOUTUBE }}
-        run: python trending_youtube.py
+        run: python youtube_data_collector.py
 
       - name: Commit and Push Changes
         run: |
