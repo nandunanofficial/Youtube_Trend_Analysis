@@ -1,64 +1,70 @@
 import os
-import pandas as pd
-from datetime import datetime
+import csv
+import time
 from googleapiclient.discovery import build
-import googleapiclient.errors
+from datetime import datetime
 
-# Use GitHub Secrets for API Key
+# Fetch API Key from GitHub Secrets
 API_KEY = os.getenv("API_YOUTUBE")
 
-# Initialize YouTube API
+# Build YouTube API client
 youtube = build("youtube", "v3", developerKey=API_KEY)
-csv_filename = "youtube_trending_data.csv"
 
-def fetch_trending_videos():
-    try:
-        request = youtube.videos().list(
-            part="snippet,statistics",
-            chart="mostPopular",
-            maxResults=10,
-            regionCode="IN"
-        )
-        response = request.execute()
+# Define CSV file path
+CSV_FILE = "youtube_trending_data.csv"
 
-        video_data = []
-        for item in response["items"]:
-            video_title = item["snippet"]["title"]
-            video_views = item["statistics"].get("viewCount", "N/A")
-            channel_id = item["snippet"]["channelId"]
-            channel_name = item["snippet"]["channelTitle"]
+# Function to fetch trending videos
+def get_trending_videos():
+    request = youtube.videos().list(
+        part="snippet,statistics",
+        chart="mostPopular",
+        regionCode="IN",  # Change to "US" or other country if needed
+        maxResults=10
+    )
+    response = request.execute()
 
-            # Fetch channel details
-            channel_request = youtube.channels().list(
-                part="statistics",
-                id=channel_id
-            )
-            channel_response = channel_request.execute()
+    video_data = []
+    for video in response.get("items", []):
+        video_id = video["id"]
+        title = video["snippet"]["title"]
+        channel_id = video["snippet"]["channelId"]
+        channel_title = video["snippet"]["channelTitle"]
+        views = video["statistics"].get("viewCount", "0")
+        likes = video["statistics"].get("likeCount", "0")
+        comments = video["statistics"].get("commentCount", "0")
+        
+        # Fetch channel details
+        channel_info = youtube.channels().list(
+            part="statistics",
+            id=channel_id
+        ).execute()
 
-            if channel_response["items"]:
-                channel_stats = channel_response["items"][0]["statistics"]
-                subscriber_count = channel_stats.get("subscriberCount", "N/A")
-                total_videos = channel_stats.get("videoCount", "N/A")
-                total_views = channel_stats.get("viewCount", "N/A")
-            else:
-                subscriber_count = total_videos = total_views = "N/A"
+        if channel_info["items"]:
+            subs = channel_info["items"][0]["statistics"].get("subscriberCount", "0")
+            total_videos = channel_info["items"][0]["statistics"].get("videoCount", "0")
+            total_views = channel_info["items"][0]["statistics"].get("viewCount", "0")
+        else:
+            subs, total_videos, total_views = "0", "0", "0"
 
-            timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            video_data.append([
-                timestamp, video_title, channel_name, subscriber_count, total_videos, total_views, video_views
-            ])
-
-        df = pd.DataFrame(video_data, columns=[
-            "Timestamp", "Video Title", "Channel Name", "Subscribers", "Total Videos", "Channel Views", "Video Views"
+        video_data.append([
+            datetime.now().strftime("%Y-%m-%d %H:%M:%S"), title, channel_title, 
+            views, likes, comments, subs, total_videos, total_views, f"https://www.youtube.com/watch?v={video_id}"
         ])
+    
+    return video_data
 
-        df.to_csv(csv_filename, mode="a", header=not os.path.exists(csv_filename), index=False)
-        print(f"✅ Data saved to {csv_filename} at {timestamp}")
+# Function to save data to CSV
+def save_to_csv(data):
+    file_exists = os.path.isfile(CSV_FILE)
+    with open(CSV_FILE, "a", newline="", encoding="utf-8") as file:
+        writer = csv.writer(file)
+        if not file_exists:
+            writer.writerow(["Timestamp", "Title", "Channel", "Views", "Likes", "Comments", 
+                             "Subscribers", "Total Videos", "Total Channel Views", "Video URL"])
+        writer.writerows(data)
 
-    except googleapiclient.errors.HttpError as e:
-        print(f"❌ API Request Failed: {e}")
-    except Exception as e:
-        print(f"❌ Error: {e}")
+# Fetch and store trending videos
+trending_videos = get_trending_videos()
+save_to_csv(trending_videos)
 
-if __name__ == "__main__":
-    fetch_trending_videos()
+print("✅ YouTube trending data updated successfully.")
