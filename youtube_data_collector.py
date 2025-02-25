@@ -1,6 +1,5 @@
 import os
 import csv
-import time
 from googleapiclient.discovery import build
 
 # ✅ Get API Key from GitHub Secrets
@@ -74,13 +73,9 @@ def save_to_csv(data):
         writer.writerows(data)
         print(f"✅ Data Saved to {CSV_FILE}")
 
-# ✅ Run Every Hour
-while True:
-    print("🚀 Fetching Trending YouTube Data...")
-    trending_videos = fetch_trending_videos()
+# ✅ Run Once Per Execution
+print("🚀 Fetching Trending YouTube Data...")
+trending_videos = fetch_trending_videos()
 
-    if trending_videos:
-        save_to_csv(trending_videos)
-
-    print("⏳ Waiting 1 hour before next update...\n")
-    time.sleep(3600)  # Wait for 1 hour
+if trending_videos:
+    save_to_csv(trending_videos)
