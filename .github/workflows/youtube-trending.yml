@@ -1,35 +1,36 @@
-name: Fetch YouTube Trending Data
+name: YouTube Trending Data Collector
 
 on:
   schedule:
-    - cron: '0 * * * *'  # Runs every hour
-  workflow_dispatch:  # Allow manual run
+    - cron: "0 * * * *"  # Runs every hour
+
+  workflow_dispatch:  # Allows manual execution
 
 jobs:
-  fetch-trending:
+  collect-trending-data:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
+      - name: ⬇️ Checkout Repository
+        uses: actions/checkout@v4
 
-      - name: Set up Python
+      - name: 🔧 Setup Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.x'
+          python-version: '3.9'
 
-      - name: Install Dependencies
+      - name: 📦 Install Dependencies
         run: pip install google-api-python-client
 
-      - name: Run Python Script
+      - name: 🚀 Run YouTube Trending Data Collector
         env:
-          YOUTUBE_API_KEY: ${{ secrets.API_YOUTUBE }}
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
         run: python youtube_data_collector.py
 
-      - name: Commit and Push Changes
+      - name: 📤 Commit and Push Updated CSV File
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
-          git add youtube_trending_data.csv
-          git commit -m "Updated YouTube trending data [$(date)]" || echo "No changes to commit"
+          git add youtube_trending.csv
+          git commit -m "🔄 Updated Trending YouTube Data" || echo "No changes to commit"
           git push
