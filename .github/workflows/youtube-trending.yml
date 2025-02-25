@@ -5,6 +5,10 @@ on:
     - cron: "0 * * * *"  # Runs every hour
   workflow_dispatch:  # Allows manual execution
 
+permissions:
+  contents: write
+  actions: read
+
 jobs:
   fetch-trending:
     runs-on: ubuntu-latest
