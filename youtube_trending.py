@@ -12,7 +12,7 @@ nltk.download('stopwords')
 from nltk.corpus import stopwords
 
 API_KEY = os.getenv("YOUTUBE_API_KEY")
-REGION = "US"
+REGION = "IN"
 MAX_RESULTS = 50
 
 def fetch_trending_videos():
