@@ -1,0 +1,39 @@
+name: YouTube Data Collection
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"  
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  collect_data:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.9"
+
+      - name: Install Dependencies
+        run: |
+          pip install pandas requests nltk
+          python -m nltk.downloader stopwords
+
+      - name: Run YouTube Data Script
+        run: python youtube_trending.py
+
+      - name: Commit and Push Data
+        run: |
+          git config --global user.email "github-actions@github.com"
+          git config --global user.name "GitHub Actions"
+          git add youtube_trending_data.csv
+          git commit -m "Update trending data $(date)"
+          git push
