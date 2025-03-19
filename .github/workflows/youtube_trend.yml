@@ -2,7 +2,7 @@ name: YouTube Data Collection
 
 on:
   schedule:
-    - cron: "*/10 * * * *"  
+    - cron: "*/10 * * * *"  # Runs every 10 minutes
   workflow_dispatch:
 
 permissions:
@@ -28,6 +28,8 @@ jobs:
           python -m nltk.downloader stopwords
 
       - name: Run YouTube Data Script
+        env:
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
         run: python youtube_trending.py
 
       - name: Commit and Push Data
@@ -35,5 +37,4 @@ jobs:
           git config --global user.email "github-actions@github.com"
           git config --global user.name "GitHub Actions"
           git add youtube_trending_data.csv
-          git commit -m "Update trending data $(date)"
-          git push
+          git diff --quiet && echo "No changes to commit" || (git commit -m "Update trending data $(date)" && git push)
